@@ -7,16 +7,14 @@ class Gaussian(Distribution):
 
     def __init__(self, device , **kwargs):
         super().__init__(device, "Gaussian", **kwargs)
+        self.number_of_layers = 0
         
-        
-
         
 
     def circuit(self, n_layers):
 
-
-
         n = n_layers
+        self.number_of_layers = n
         num_qubits = 2 * (n + 1)
         control_qubit = 0
         ball_qubit = n + 1
@@ -61,10 +59,20 @@ class Gaussian(Distribution):
                     qml.Hadamard(wires=control_qubit)
 
             return qml.sample(wires=ball_measure_wires)
-                
-                
             
-        return gaussianCircuit
+        return gaussianCircuit, ball_measure_wires
+    
+    def as_code(self):
+        n = self.number_of_layers
+        num_qubits = 2 * (n + 1)
+        control_qubit = 0
+        ball_qubit = n + 1
+
+                
+        #import pennylane as qml
+
+        ####### initializin
+        
 
 
 
@@ -78,3 +86,42 @@ class Gaussian(Distribution):
 
         probs = np.exp(-0.5 * ((x - mu) / sigma) ** 2)
         return probs / np.sum(probs)
+    
+    
+    def as_code(self, n_layers: int) -> str:
+        
+        return f'''\
+    @qml.qnode(qml.device("default.qubit", wires={2*(n_layers+1)}, shots=1000))
+    def gaussianCircuit():
+        control_qubit = 0
+        ball_qubit = {n_layers + 1}
+        ball_measure_wires = [ball_qubit + i for i in range(-{n_layers}, {n_layers}+1, 2)]
+
+        def peg(i):
+            qml.CSWAP(wires=[control_qubit, i, i - 1])
+            qml.CNOT(wires=[i, control_qubit])
+            qml.CSWAP(wires=[control_qubit, i, i + 1])
+
+        qml.Hadamard(wires=control_qubit)
+        qml.PauliX(wires=ball_qubit)
+
+        for layer in range({n_layers}):
+            offset = layer
+            positions = []
+            for pos in range(-offset, offset + 1, 2):
+                i = ball_qubit + pos
+                if 0 < i < {2*(n_layers+1)} - 1:
+                    positions.append(i)
+
+            for j, i in enumerate(positions):
+                peg(i)
+                if j < len(positions) - 1:
+                    qml.CNOT(wires=[i + 1, control_qubit])
+
+            if layer < {n_layers} - 1:
+                m = qml.measure(wires=control_qubit)
+                qml.cond(m, qml.PauliX)(wires=control_qubit)
+                qml.Hadamard(wires=control_qubit)
+
+        return qml.sample(wires=ball_measure_wires)
+    '''

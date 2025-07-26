@@ -38,7 +38,7 @@ class HadamardQW(Distribution):
         
 
         @qml.qnode(self.dev(wires=num_qubits))
-        def gaussianCircuit():
+        def hadamardQwCircuit():
             
             if self.type == "Asymmetric_Right":
                 qml.PauliX(wires=control_qubit)
@@ -144,7 +144,7 @@ class HadamardQW(Distribution):
                 
                 
             
-        return gaussianCircuit
+        return hadamardQwCircuit, ball_measure_wires
 
 
 
