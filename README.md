@@ -12,7 +12,7 @@ QGBx is an open-source, extensible package designed as a submission for the <a h
 You can install QGBx using
 
 ```bash
-pip install --upgrade qgbx
+pip install --upgrade QGBx
 ```
 
 ## Usage
