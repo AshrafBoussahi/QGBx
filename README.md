@@ -65,6 +65,9 @@ QGBx supports three built-in distributions:
 
 - `Gaussian` — Which is essentially a binomial distribution that converges toward a Gaussian distribution under the Laplace–de Moivre theorem when the number of layers of the Galton board becomes large.
   
+> **Note:**  
+> -`Distribution` object should take a device as the first parameter :)
+
 ```python
 from QGBx.distributions import Gaussian
 
@@ -130,5 +133,155 @@ dist = ExponentialOp(dev, rate=0.5) # rate is λ (lambda) of the exponential fun
 
 dist = GaussianOp(dev, p=0.4) # p is a parameter of the binomial distribution that controls its bias (0.5 is centered)
 ```
+
+### 3. Creating a Generator
+
+In this package, the `Generator` is the orchestrator that creates the circuit for a specific Quantum Galton Board architecture to achieve a given `Distribution` using a chosen `Device`.  
+
+It can be instantiated as follows:  
+
+```python
+import QGBx
+
+gen = QGBx.Generator(dev, dist)
+```
+
+After that, it provides the user with the following methods:
+
+---
+#### `galton_board(n_layers)`
+
+Build the Galton Board circuit.
+
+**Parameters**:  
+- `n_layers` *(int)* – Number of layers in the Galton Board.
+
+**Returns**:  
+- *Quantum circuit object* – The constructed Galton Board circuit and it will automatically assign the circuit to the device, and will be ready for the running phase
+
+---
+
+#### `run()`
+Execute the Galton Board circuit on the configured device.  
+
+**Returns:**  
+- `dict` – One-hot probability distribution from execution and will assign the measured probabilities to the Distribution object, and calculate the ideal probabilities and assign them to the same.
+
+---
+
+#### `job_results(jobID)`
+Retrieve results for a given IBM job ID after using the job on the real device is completed (it may take time if the QPU is busy).  
+
+**Parameters:**  
+- `jobID` (`str`): IBM Quantum job ID.  
+
+**Returns:**  
+- `dict` – One-hot probability distribution.
+
+---
+
+#### `export_circuit_as_png(fold=-1, filename="circuit.png", style="black_white")`
+Export the circuit diagram as a PNG image.  
+
+**Parameters:**  
+- `fold` (`int`): Folding parameter for circuit visualization. set to 25 if you want the circuit to be splitted (only with qiskit circuits)  
+- `filename` (`str`): Output filename (and directory) 
+- `style` (`str`): Diagram style. Only the supported
+
+---
+
+#### `draw_circuit(fold=-1)`
+Draw the circuit using the device's visualization method.  
+
+**Parameters:**  
+- `fold` (`int`): Folding parameter for circuit visualization. set to 25 if you want the circuit to be splitted (only with qiskit circuits)
+
+---
+
+#### `export_qasm(version="2", filename="exported_circuit.txt")`
+Export the circuit as a QASM file (only with qiskit circuits)  
+
+**Parameters:**  
+- `version` (`str`): QASM version. "2" or "3" 
+- `filename` (`str`): Output filename (and directory)
+
+### 4. Generating the n_layers galton board:
+
+This step can be achieved through the genertaor `.galton_board(n_layers)` method as follow:
+
+```python
+n_layers = 6
+gen.galton_board(n_layers) #bigger n_layers (more than 6 in some machines) will become computaionally hard if not used the Optimized circuit
+```
+
+> - it will automatically assign the circuit to the device, and will be ready for the running
+
+### 5. Running the circuit:
+This step can be achieved through the genertaor `.run()` method as follow:
+
+```python
+gen.run()
+```
+
+> - This will assign the measured probabilities to the Distribution object, and calculate the ideal probabilities and assign them to the same.
+
+### 5. Analyze and Visualize the Results
+
+After retrieving the measured and the ideal theoretical distributions, we can visualize the results through plotting, and analyze the circuit's performance by comparing the measured and the ideal distributions using different metrics.
+
+#### Visualizing:
+QGBx includes a `Visualizer` object that takes a `Distribution` object when instantiated, and gives the user the ability to:
+
+
+---
+#### `plot(interval_length=None, ideal=False)`
+
+Plot the probability distribution (measured or ideal if "ideal" = True)
+
+**Parameters**:  
+- interval_length (int, optional): Number of bins to display.
+- ideal (bool): Whether to plot the ideal distribution instead of measured.
+
+This can be achieved through:
+```python
+QGBx.Visualiser(dist).plot()
+```
+
+this will result in the following:
+<p align="center">
+  <img alt="ExponentialGlaton" src="https://github.com/user-attachments/assets/11c8b365-9a34-4e0d-a42c-dab31fb5bb91"
+       width="500" />
+</p>
+
+
+---
+
+#### `plot_with_ideal(interval_length=None)`
+
+Plot the measured probability distribution with the ideal distribution overlaid as points connected with lignes
+
+**Parameters**:  
+- interval_length (int, optional): Number of bins to display.
+- ideal (bool): Whether to plot the ideal distribution instead of measured.
+
+This can be achieved through:
+```python
+QGBx.Visualiser(dist).plot_with_ideal()
+```
+
+this will result in the following:
+<p align="center">
+  <img alt="Expo" src="https://github.com/user-attachments/assets/2bb8d6e4-65d2-40e0-a2e6-c4b901c78dad"
+       width="500" />
+</p>
+
+
+---
+
+
+
+
+
+
 
 
