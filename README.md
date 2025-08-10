@@ -298,7 +298,28 @@ The `Analyzer` have the following methods:
 This object can be used in the defined pipeline as follow:
 
 ```python
+Analyzer = QGBx.Analyzer(dist)
+Analyzer.analyze(show_passed=False)
+```
 
+This will results in the following output summary:
+<p align="center">
+  <img alt="Intrprt" src="https://github.com/user-attachments/assets/762b4585-a804-4212-af9a-aece8a1b52ec"
+       width="800" />
+</p>
+
+The user can also define thresholds and compare the results to the:
+
+```python
+Analyzer = QGBx.Analyzer(dist)
+Analyzer.analyze(thresholds = [0.02,0.05,0.1,0.1,0.05], show_passed=True)
+```
+
+This will results in the following output summary:
+<p align="center">
+  <img alt="Intrprt" src="https://github.com/user-attachments/assets/32c48c5c-2214-4db1-9e5d-102998db9b27"
+       width="800" />
+</p>
 
 
 
