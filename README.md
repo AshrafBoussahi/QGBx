@@ -2,6 +2,9 @@
 <img width="1600" height="300" alt="QGBXhEADER" src="https://github.com/user-attachments/assets/90c3af9a-2f7b-4386-a4de-aeb187c13ebf" />
 
 ---
+*"Nature isn't classical, dammit, and if you want to make a simulation of nature, you'd better make it quantum mechanical"*
+
+
 QGBx is an open-source, extensible package designed as a submission for the <a href="https://www.thewiser.org/quantum-walks-monte-carlo" target="_blank">Project 1:</a> "Quantum Walks and Monte Carlo" hosted by the Wiser-Womanium Quantum Summer Program. This package serves as a sandbox for generating several statistical distributions using different Variational Multi-Dimensional Quantum Galton Board architectures, mainly derived from the <a href="https://arxiv.org/abs/2202.01735"> Universal Statistical Distribution</a> paper by Mark Carney & Ben Varcoe., along with the authors’ efforts to optimize its structure and results for various uses under different noiseless and noisy quantum simulations and even an end-point to run the generated circuits on a real QPU.
 
 ## Installation
@@ -160,7 +163,7 @@ Build the Galton Board circuit.
 **Returns**:  
 - *Quantum circuit object* – The constructed Galton Board circuit and it will automatically assign the circuit to the device, and will be ready for the running phase
 
----
+
 
 #### `run()`
 Execute the Galton Board circuit on the configured device.  
@@ -168,7 +171,7 @@ Execute the Galton Board circuit on the configured device.
 **Returns:**  
 - `dict` – One-hot probability distribution from execution and will assign the measured probabilities to the Distribution object, and calculate the ideal probabilities and assign them to the same.
 
----
+
 
 #### `job_results(jobID)`
 Retrieve results for a given IBM job ID after using the job on the real device is completed (it may take time if the QPU is busy).  
@@ -179,7 +182,7 @@ Retrieve results for a given IBM job ID after using the job on the real device i
 **Returns:**  
 - `dict` – One-hot probability distribution.
 
----
+
 
 #### `export_circuit_as_png(fold=-1, filename="circuit.png", style="black_white")`
 Export the circuit diagram as a PNG image.  
@@ -189,7 +192,7 @@ Export the circuit diagram as a PNG image.
 - `filename` (`str`): Output filename (and directory) 
 - `style` (`str`): Diagram style. Only the supported
 
----
+
 
 #### `draw_circuit(fold=-1)`
 Draw the circuit using the device's visualization method.  
@@ -197,7 +200,7 @@ Draw the circuit using the device's visualization method.
 **Parameters:**  
 - `fold` (`int`): Folding parameter for circuit visualization. set to 25 if you want the circuit to be splitted (only with qiskit circuits)
 
----
+
 
 #### `export_qasm(version="2", filename="exported_circuit.txt")`
 Export the circuit as a QASM file (only with qiskit circuits)  
@@ -205,6 +208,8 @@ Export the circuit as a QASM file (only with qiskit circuits)
 **Parameters:**  
 - `version` (`str`): QASM version. "2" or "3" 
 - `filename` (`str`): Output filename (and directory)
+
+---
 
 ### 4. Generating the n_layers galton board:
 
