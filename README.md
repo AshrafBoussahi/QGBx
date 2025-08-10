@@ -1,6 +1,7 @@
 # QGBx
 <img width="1600" height="300" alt="QGBXhEADER" src="https://github.com/user-attachments/assets/90c3af9a-2f7b-4386-a4de-aeb187c13ebf" />
 
+---
 QGBx is an open-source, extensible package designed as a submission for the <a href="https://www.thewiser.org/quantum-walks-monte-carlo" target="_blank">Project 1:</a> "Quantum Walks and Monte Carlo" hosted by the Wiser-Womanium Quantum Summer Program. This package serves as a sandbox for generating several statistical distributions using different Variational Multi-Dimensional Quantum Galton Board architectures, mainly derived from the <a href="https://arxiv.org/abs/2202.01735"> Universal Statistical Distribution</a> paper by Mark Carney & Ben Varcoe., along with the authors’ efforts to optimize its structure and results for various uses under different noiseless and noisy quantum simulations and even an end-point to run the generated circuits on a real QPU.
 
 ## Installation
@@ -216,7 +217,7 @@ gen.galton_board(n_layers) #bigger n_layers (more than 6 in some machines) will 
 
 > - it will automatically assign the circuit to the device, and will be ready for the running
 
-### 5. Running the circuit:
+### 6. Running the circuit:
 This step can be achieved through the genertaor `.run()` method as follow:
 
 ```python
@@ -275,8 +276,34 @@ this will result in the following:
        width="500" />
 </p>
 
-
 ---
+
+#### Analyzing:
+QGBx includes the `Analyzer` object that takes a `Distribution` object when instantiated that give the ability to benchmark the measured probability distribution against the ideal theoretical one to assess the accuracy of the circuit and the method through various metrics, and can print a summary of the results.  
+This object also gives the user the ability to define a tolerance for each test in order to generate a report indicating whether the circuit achieved satisfactory results.
+
+The `Analyzer` have the following methods:
+
+| Method | Description |
+|--------|-------------|
+| `total_variation_distance()` | Calculate the Total Variation Distance (TVD) between the ideal (theoritical) and measured distributions. TVD measures the largest possible probability difference between two distributions. Values closer to 0 indicate high similarity. |
+| `jensen_shannon_divergence()` | Calculate the Jensen–Shannon Divergence (JSD) between the ideal (theoritical) and measured distributions. JSD is symmetric and bounded between 0 and 1. A value close to 0 means the distributions are identical. |
+| `chi_squared_test()` | Calculate the Chi-Squared statistic. Smaller values indicate that the measured results are close to the ideal distribution. |
+| `hellinger_distance()` | Calculate the Hellinger Distance between the ideal and quantum distributions. Values range between 0 (identical) and 1 (maximally different). Values < 0.1 are generally acceptable. |
+| `entropy_difference()` | Calculate the absolute difference in **Shannon entropy** between the ideal and measured distributions. it measures randomness and uncertaintywhere smaller differences mean the distributions have similar uncertainty levels. |
+| **`analyze(thresholds=None, show_passed=True)`** | Run all analysis metrics and display results in a matplotlib table. Updates pass/fail status using thresholds and displays a formatted table of results. |
+| **`get_analyze_results()`** | Return the results of the last analysis as a dictionary. If `analyze()` hasn't been run, it is executed automatically without displaying the table. |
+
+
+This object can be used in the defined pipeline as follow:
+
+```python
+
+
+
+
+
+
 
 
 
